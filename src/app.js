@@ -2,6 +2,7 @@ import express from "express";
 import userRoutes from "./routes/user.routes.js"
 import classRoutes from "./routes/class.routes.js"
 import membershipsRoutes from "./routes/memberships.routes.js"
+import inventoryRoutes from "./routes/inventory.routes.js"
 import authRoutes from "./routes/auth.routes.js"
 import morgan from "morgan";
 
@@ -12,6 +13,7 @@ app.use(morgan('dev'));
 app.use(userRoutes)
 app.use(classRoutes)
 app.use(membershipsRoutes)
+app.use(inventoryRoutes)
 app.use(authRoutes)
 
 

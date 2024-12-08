@@ -13,8 +13,8 @@ export const login = async (req, res) => {
                 return res.status(400).json({ message: 'Error: User not found' });
             }       
     
-    const isValidPassword = await bcrypt.compare(password, existingUser.password);
-        if (isValidPassword) {
+    const isValidPassword = await (password === existingUser.password);
+        if (!isValidPassword) {
             return res.status(400).json({ message: 'Error: Invalid Credentials' });
         }
     const token = await createAccesToken({id: existingUser.id})

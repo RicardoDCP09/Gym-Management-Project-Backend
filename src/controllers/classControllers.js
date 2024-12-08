@@ -6,7 +6,7 @@ export const getClasses = async (req,res)=>{
 
     const classesCoach = classes.map ( _class => {
         const trainer = users.find( trainer => trainer.id === _class.coach_id)
-        return { ..._class, coach_id: trainer ? trainer.name + ' ' +trainer.lastname : 'Entrenador no Encontrado'} 
+        return { ..._class, coach_id: trainer ? trainer.id +' '+ `(${trainer.name}` + ' ' + `${trainer.lastname})` : 'Entrenador no Encontrado'}
     })
     res.json(classesCoach);
 }
@@ -20,10 +20,12 @@ export const getClass = async (req, res) => {
     if (!classs) {
         return res.status(404).json({ message: 'Class  not found' });
     }
-    const classesCoach = classes.map ( _class => {
-        const trainer = users.find( trainer => trainer.id === _class.coach_id)
-        return { ..._class, coach_id: trainer ? trainer.id +' '+ `(${trainer.name}` + ' ' + `${trainer.lastname})` : 'Entrenador no Encontrado'} 
-    })
+    const trainer = users.find( trainer => trainer.id === classs.coach_id)
+
+    const classesCoach = {
+    ...classs, 
+    coach_id: trainer ? trainer.id +' '+ `(${trainer.name}` + ' ' + `${trainer.lastname})` : 'Entrenador no Encontrado'
+    }
 
     res.json(classesCoach);
 }

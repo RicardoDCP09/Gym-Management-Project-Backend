@@ -729,13 +729,7 @@ export const dataBase = [{
             "status": "1",
             "day_use": "2024-09-10"
         },
-        {
-            "id": "1f5e",
-            "equipment_name": "Maria la de la cuca Fria",
-            "quantity": "2",
-            "status": "1",
-            "day_use": "2024-11-12"
-        }
+
     ],
     "reports": [
         {
