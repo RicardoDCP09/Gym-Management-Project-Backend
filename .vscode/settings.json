@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Gym_Management",
+            "database": "Gym_Management",
+            "username": "postgres",
+            "password": ""
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-import { dataBase } from "../db/db.js";
+import { pool } from "../db.js";
 
 export const getInvetory = async (req, res) => {
     const items = dataBase[0].inventory
@@ -24,7 +24,7 @@ export const getItem = async (req, res) => {
         return res.status(404).json({ message: 'Item  not found' });
     }
     const statuses = status.find(statuss => statuss.id === item.status);
-    
+
     const itemPrint = {
         ...item,
         status: statuses ? `${statuses.id} (${statuses.status})` : 'Status no encontrado' // Cambiar 'statuses.name' a 'statuses.status'
@@ -36,7 +36,7 @@ export const createItems = async (req, res) => {
     try {
         const data = req.body;
         const items = dataBase[0].inventory;
-        const existingItem = items.find(item => item.equipment_name===data.equipment_name);
+        const existingItem = items.find(item => item.equipment_name === data.equipment_name);
 
         if (existingItem) {
             return res.status(409).json({ message: 'Error: Item already exists' });

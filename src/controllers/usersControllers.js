@@ -1,79 +1,92 @@
-import { dataBase } from "../db/db.js";
+import { pool } from "../db.js";
+
 
 export const getUsers = async (req, res) => {
-    const user = dataBase[0].users
-    const role=dataBase [0].roles
-    const membership=dataBase[0].type_memberships
-    
-    const usersShowed = user.map(user => {
-
-        const roles = role.find(role => role.id === user.role);
-
-        const memberships = membership.find(member => member.id === user.typeMembership);
-        return {
-            ...user,
-            role: roles ? `${roles.id} (${roles.name})` : 'Rol no encontrado', 
-            typeMembership: memberships ? `${memberships.id} (${memberships.name})` : 'Sin membresía' 
-
-        };
-    });
-    res.json(usersShowed);
+    try {
+        const { rows } = await pool.query("SELECT * FROM Gym_management.users");
+        res.json(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error obtaining users" })
+    }
 }
 
 export const getUser = async (req, res) => {
-    const { id } = req.params;
-    const users = dataBase[0].users;
-    const role=dataBase [0].roles
-    const membership=dataBase[0].type_memberships
-
-    const user = users.find(user => user.id == id);
-    if (!user) {
-        return res.status(404).json({ message: 'User  not found' });
+    try {
+        const { id } = req.params;
+        const { rows } = await pool.query("SELECT * FROM Gym_management.users WHERE id_user = $1", [id]);
+        res.json(rows[0])
+    } catch {
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "User not found" })
+        }
+        console.log(error)
+        return res.status(500).json({ message: "Error obtaining user" })
     }
-
-    const roles = role.find(role => role.id === user.role);
-
-    const memberships = membership.find(member => member.id === user.typeMembership);
-    
-    const userPrint = {
-            ...user,
-            role: roles ? `${roles.id} (${roles.name})` : 'Rol no encontrado', 
-            typeMembership: memberships ? `${memberships.id} (${memberships.name})` : 'Sin membresía' 
-
-    };
-
-
-    res.json(userPrint);
 }
+
 export const createUsers = async (req, res) => {
     try {
         const data = req.body;
-        const users = dataBase[0].users;
-        const existingUser = users.find(user => user.email === data.email);
-
-        if (existingUser) {
-            return res.status(409).json({ message: 'Error: user already exists' });
-        }
-
-        const newId = users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1;
-
-        const newUser = {
-            id: newId,
-            name: data.name,
-            lastname: data.lastname,
-            email: data.email,
-            password: data.password,
-            phone: data.phone,
-            fechaNac: data.fechaNac,
-            registerDate: data.registerDate,
-            typeMembership: data.typeMembership,
-            role: data.role
-        };
-
-        users.push(newUser);
-        res.status(201).json(newUser);
+        const { rows } = await pool.query("INSERT INTO Gym_management.users (name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *",
+            [
+                data.name,
+                data.lastname,
+                data.email,
+                data.password,
+                data.phone,
+                data.fechaNac,
+                data.registerdate,
+                data.typeMembership,
+                data.role
+            ]
+        );
+        return res.json(rows[0])
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        console.log(error)
+
+        if (error.code === "23505") {
+            return res.status(409).json({ message: "Email already exists" })
+        }
+        return res.status(500).json({ message: "Error creating user" })
+    }
+}
+
+export const updateUsers = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        const { rows } = await pool.query("UPDATE Gym_management.users SET name= $1, lastname=$2, email= $3, password= $4, phone= $5, fechaNac= $6, registerdate= $7, typemembership= $8, role= $9 WHERE id_user = $10 RETURNING *",
+            [
+                data.name,
+                data.lastname,
+                data.email,
+                data.password,
+                data.phone,
+                data.fechaNac,
+                data.registerdate,
+                data.typemembership,
+                data.role,
+                id
+            ]
+        );
+        return res.json(rows[0]);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error updating user" });
+    }
+};
+
+export const deleteUsers = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rowCount } = await pool.query(
+            "DELETE FROM Gym_management.users WHERE id_user = $1 RETURNING *", [id]);
+        if (rowCount === 0) {
+            return res.status(404).json({ message: "User not found" })
+        }
+        return res.sendStatus(204);
+    } catch {
+        return res.status(500).json({ message: "Error Deleting user" })
     }
 }

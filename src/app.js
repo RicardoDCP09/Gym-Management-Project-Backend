@@ -1,7 +1,7 @@
 import express from "express";
 import userRoutes from "./routes/user.routes.js"
 import classRoutes from "./routes/class.routes.js"
-import membershipsRoutes from "./routes/memberships.routes.js"
+import membershipsRoutes from "./routes/type_memberships.routes.js"
 import inventoryRoutes from "./routes/inventory.routes.js"
 import authRoutes from "./routes/auth.routes.js"
 import morgan from "morgan";
@@ -18,4 +18,4 @@ app.use(authRoutes)
 
 
 
-export default app ;
+export default app;
