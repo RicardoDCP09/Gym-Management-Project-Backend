@@ -1,69 +1,102 @@
 import { pool } from "../db.js";
 
 export const getClasses = async (req, res) => {
-    const classes = dataBase[0].classes
-    const users = dataBase[0].users
-
-    const classesCoach = classes.map(_class => {
-        const trainer = users.find(trainer => trainer.id === _class.coach_id)
-        return { ..._class, coach_id: trainer ? trainer.id + ' ' + `(${trainer.name}` + ' ' + `${trainer.lastname})` : 'Entrenador no Encontrado' }
-    })
-    res.json(classesCoach);
+    try {
+        const { rows } = await pool.query("SELECT * FROM Gym_management.classes");
+        res.json(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error obtaining the Classses" })
+    }
 }
 
 export const getClass = async (req, res) => {
-    const { id } = req.params;
-    const classes = dataBase[0].classes;
-    const users = dataBase[0].users;
-
-    const classs = classes.find(classs => classs.id == id);
-    if (!classs) {
-        return res.status(404).json({ message: 'Class  not found' });
+    try {
+        const { id } = req.params;
+        const { rows } = await pool.query("SELECT * FROM Gym_management.classes WHERE id_class = $1", [id]);
+        res.json(rows[0])
+    } catch {
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "Class not found" })
+        }
+        console.log(error)
+        return res.status(500).json({ message: "Error obtaining Class" })
     }
-    const trainer = users.find(trainer => trainer.id === classs.coach_id)
-
-    const classesCoach = {
-        ...classs,
-        coach_id: trainer ? trainer.id + ' ' + `(${trainer.name}` + ' ' + `${trainer.lastname})` : 'Entrenador no Encontrado'
-    }
-
-    res.json(classesCoach);
 }
 
 
 export const createClasses = async (req, res) => {
     try {
         const data = req.body;
-        const classess = dataBase[0].classes;
-        const users = dataBase[0].users;
-        const roles = dataBase[0].roles;
 
-        const trainer = users.find(user => user.id === data.coach_id && user.role === "2");
-        if (!trainer) {
-            return res.status(400).json({ message: 'Error: Invalid coach ID. The coach must have role 2.' });
+        const { rows: coachRows } = await pool.query(
+            "SELECT * FROM Gym_management.users WHERE id_user = $1 AND role = 2",
+            [data.coach_id]
+        );
+
+        if (coachRows.length === 0) {
+            return res.status(404).json({ message: "Error creating Class: Coach doesn't exist or is not authorized" });
         }
-
-        const existingClass = classess.find(_class => _class.class_time === data.class_time);
-        if (existingClass) {
-            return res.status(409).json({ message: 'Error: Class already exists' });
-        }
-
-        const newId = classess.length > 0 ? Math.max(...classess.map(_class => _class.id)) + 1 : 1;
-
-        const newClass = {
-
-            id: newId,
-            name: data.name,
-            capacity: data.capacity,
-            coach_id: data.coach_id,
-            class_time: data.class_time,
-            status: data.status
-        };
-
-        classess.push(newClass);
-        res.status(201).json(newClass);
+        const { rows } = await pool.query("INSERT INTO Gym_management.classes (name,capacity,coach_id,class_time,status ) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+            [
+                data.name,
+                data.capacity,
+                data.coach_id,
+                data.class_time,
+                data.status
+            ]
+        );
+        return res.json(rows[0])
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        console.log(error)
+
+        if (error.code === "23505") {
+            return res.status(409).json({ message: "This Class already exists" })
+        }
+        return res.status(500).json({ message: "Error creating Class" })
+    }
+}
+
+
+export const updateClass = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        const { rows: coachRows } = await pool.query(
+            "SELECT * FROM Gym_management.users WHERE id_user = $1 AND role = 2",
+            [data.coach_id]
+        );
+
+        if (coachRows.length === 0) {
+            return res.status(404).json({ message: "Error Updating Class: Coach doesn't exist or is not authorized" });
+        }
+        const { rows } = await pool.query("UPDATE Gym_management.classes SET name= $1,capacity= $2,coach_id= $3,class_time= $4,status= $5 WHERE id_class= $6 RETURNING *",
+            [
+                data.name,
+                data.capacity,
+                data.coach_id,
+                data.class_time,
+                data.status,
+                id
+            ]
+        );
+        return res.json(rows[0]);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error updating Class" });
+    }
+};
+
+export const deleteClass = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rowCount } = await pool.query(
+            "DELETE FROM Gym_management.classes WHERE id_class = $1 RETURNING *", [id]);
+        if (rowCount === 0) {
+            return res.status(404).json({ message: "Class not found" })
+        }
+        return res.sendStatus(204);
+    } catch {
+        return res.status(500).json({ message: "Error Deleting Class" })
     }
 }
