@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+
 import { createAccesToken } from "../libs/jwt.js";
 import bcrypt from "bcryptjs";
 
