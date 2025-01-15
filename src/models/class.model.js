@@ -1,4 +1,3 @@
-import { text } from 'express'
 import { db } from '../database/db.js '
 
 const getClasses = async () => {
