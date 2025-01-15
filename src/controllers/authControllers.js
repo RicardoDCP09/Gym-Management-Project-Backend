@@ -1,37 +1,28 @@
 
 import { createAccesToken } from "../libs/jwt.js";
 import bcrypt from "bcryptjs";
-
+import { authModel } from "../models/auth.model.js";
 
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const users = dataBase[0].users;
+        const user = await authModel.findOneByEmail(email);
 
-        const existingUser = users.find(user => user.email === email);
-        if (!existingUser) {
-            return res.status(400).json({ message: 'Error: User not found' });
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const isValidPassword = await (password === existingUser.password);
-        if (!isValidPassword) {
-            return res.status(400).json({ message: 'Error: Invalid Credentials' });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
-        const token = await createAccesToken({ id: existingUser.id })
-        res.cookie('token', token)
-        res.json({
-            id: existingUser.id,
-            name: existingUser.name,
-            lastname: existingUser.lastname,
-            email: existingUser.email,
-            password: existingUser.password,
-            phone: existingUser.phone,
-            fechaNac: existingUser.fechaNac,
-            registerDate: existingUser.registerDate,
-            typeMembership: existingUser.typeMembership,
-            role: existingUser.role
-        });
 
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid password" });
+        }
+        const token = await createAccesToken({ email: user.email })
+
+        return res.json({ token, user })
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -39,38 +30,40 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const data = req.body;
-        const users = dataBase[0].users;
-        const existingUser = users.find(user => user.email === data.email);
+        const { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role } = req.body;
 
-        if (existingUser) {
-            return res.status(409).json({ message: 'Error: User already exists' });
+        if (!name || !lastname || !email || !password || !fechaNac || !registerdate || !role) {
+            return res.status(400).json({ message: "Please fill in all fields" });
         }
-        const newId = users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1;
 
-        const newUser = {
-            id: newId,
-            name: data.name,
-            lastname: data.lastname,
-            email: data.email,
-            password: data.password,
-            phone: data.phone,
-            fechaNac: data.fechaNac,
-            registerDate: new Date(),
-            typeMembership: data.typeMembership,
-            role: data.role
-        };
+        const user = await authModel.findOneByEmail(email)
+        if (user) {
+            return res.status(409).json({ ok: false, message: "Email already exists" });
+        }
 
-        users.push(newUser);
-        const token = await createAccesToken({ id: newUser.id })
-        res.cookie('token', token)
+        const hash = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, hash);
 
-        res.json({ token, newUser });
+        const newUser = await authModel.register({ name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
 
+        const token = await createAccesToken({ email: newUser.email })
+
+        return res.status(201).json({ token, newUser });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: error.message });
     }
+}
 
+export const profile = async (req, res) => {
+    try {
+        const user = await authModel.findOneByEmail(req.email)
+
+        return res.json({ ok: true, msg: user })
+
+    } catch (error) {
+
+    }
 }
 
 export const logout = async (req, res) => {

@@ -1,11 +1,13 @@
-import {Router} from "express"
+import { Router } from "express"
 
-import {logout,register,login} from "../controllers/authControllers.js"
+import { logout, register, login, profile } from "../controllers/authControllers.js"
+import { verifyToken } from "../middlewares/jwt.middleware.js"
 
 const router = Router()
 
-router.post ('/login',login)
-router.post ('/register',register)
-router.post('/logout',logout)
+router.post('/login', login)
+router.post('/register', register)
+router.get('/profile', verifyToken, profile)
+router.post('/logout', logout)
 
 export default router

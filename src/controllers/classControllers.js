@@ -26,14 +26,15 @@ export const getClass = async (req, res) => {
 }
 
 export const createClasses = async (req, res) => {
-    const database = req.body;
-    /*const { coach_id } = req.params
-    const isCoachValid = await classModel.verifyCoach({ coach_id });
-    if (!isCoachValid) {
-        return res.status(404).json({ message: "Error creating Class: Coach doesn't exist or is not a Coach" });
-    }*/
-
     try {
+        const database = req.body;
+
+        const isCoachValid = await classModel.verifyCoach(database.coach_id);
+
+        if (!isCoachValid) {
+            return res.status(404).json({ message: "Error creating Class: Coach doesn't exist or is not a Coach" });
+        }
+
         const newClass = await classModel.createClass(database);
         res.status(201).json(newClass);
 
@@ -48,9 +49,16 @@ export const createClasses = async (req, res) => {
 
 
 export const updateClass = async (req, res) => {
-    const { id } = req.params;
-    const database = req.body;
     try {
+        const { id } = req.params;
+        const database = req.body;
+
+        const isCoachValid = await classModel.verifyCoach(database.coach_id);
+
+        if (!isCoachValid) {
+            return res.status(404).json({ message: "Error creating Class: Coach doesn't exist or is not a Coach" });
+        }
+
         const updatedClass = await classModel.updateClass(id, database);
 
         if (!updatedClass) {

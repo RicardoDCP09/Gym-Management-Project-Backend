@@ -4,6 +4,8 @@ import classRoutes from "./routes/class.routes.js"
 import membershipsRoutes from "./routes/type_memberships.routes.js"
 import inventoryRoutes from "./routes/inventory.routes.js"
 import authRoutes from "./routes/auth.routes.js"
+import recovPassword from "./routes/recovPassword.routes.js"
+//import dashboard from "./routes/dashboard.routes.js"
 import morgan from "morgan";
 
 const app = express();
@@ -15,7 +17,8 @@ app.use(classRoutes)
 app.use(membershipsRoutes)
 app.use(inventoryRoutes)
 app.use(authRoutes)
-
+app.use(recovPassword)
+//app.use(dashboard)
 
 
 export default app;

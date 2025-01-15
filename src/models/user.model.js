@@ -47,10 +47,11 @@ const updateUser = async (id, { name, lastname, email, password, phone, fechaNac
 
 const deleteUser = async ({ id }) => {
     const query = {
-        text: `DELETE FROM Gym_management.users WHERE id_user = $1`, values: [id]
+        text: `DELETE FROM Gym_management.users WHERE id_user = $1 RETURNING *`,
+        values: [id],
     }
-    const { rowCount } = await db.query(query);
-    return rowCount;
+    const { rows } = await db.query(query);
+    return rows;
 }
 
 

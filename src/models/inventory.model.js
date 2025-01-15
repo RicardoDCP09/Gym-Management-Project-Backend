@@ -51,8 +51,8 @@ const deleteInventory = async ({ id }) => {
     const query = {
         text: `DELETE FROM Gym_management.inventory WHERE id_inventory = $1 RETURNING *`, values: [id]
     }
-    const { rowCount } = await db.query(query);
-    return rowCount;
+    const { rows } = await db.query(query);
+    return rows;
 }
 
 

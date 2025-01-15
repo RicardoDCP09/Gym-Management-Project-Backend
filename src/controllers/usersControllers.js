@@ -57,18 +57,16 @@ export const updateUsers = async (req, res) => {
 };
 
 export const deleteUsers = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     try {
-        const deleteUser = await userModel.deleteUser({ id })
-        if (!deleteUser) {
-            return res.status(404).json({ message: 'Type Membership not found' });
+        const deletedUser = await userModel.deleteUser({ id });
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'User  not found' });
         }
-        res.status(201).json({ message: 'User deleted successfully' })
-        if (rowCount === 0) {
-            return res.status(404).json({ message: "User not found" })
-        }
-        return res.sendStatus(204).json(deleteUser);
-    } catch {
-        return res.status(500).json({ message: "Error Deleting user" })
+        res.status(201).json(deletedUser);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error deleting user" });
     }
-}
+};

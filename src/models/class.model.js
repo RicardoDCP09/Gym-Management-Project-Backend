@@ -50,7 +50,7 @@ const deleteClass = async ({ id }) => {
     return rows;
 }
 
-const verifyCoach = async ({ id }) => {
+const verifyCoach = async (id) => {
     const query = {
         text: `SELECT * FROM Gym_management.users WHERE id_user = $1 AND role = 2`,
         values: [id]
