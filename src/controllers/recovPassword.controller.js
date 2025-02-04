@@ -15,7 +15,7 @@ export const recover = async (req, res) => {
         }
         console.log('User  ID to store:', user.id_user);
         const token = await createAccesToken({ userId: user.id_user });
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutos
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
         await passwordResetTokenModel.storeToken(user.id_user, token, expiresAt);
 

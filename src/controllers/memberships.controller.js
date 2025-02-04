@@ -1,4 +1,4 @@
-import { typeMembershipsModel } from "../models/typesMemberships.model.js"
+import { typeMembershipsModel } from "../models/typememberships.model.js"
 
 export const getTypeMemberships = async (req, res) => {
     try {

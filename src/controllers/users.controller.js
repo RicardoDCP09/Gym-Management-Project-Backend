@@ -5,7 +5,7 @@ import { userModel } from "../models/user.model.js"
 export const getUsers = async (req, res) => {
     try {
         const users = await userModel.getUsers()
-        res.status(201).json(users)
+        res.status(200).json(users)
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: "Error obtaining users" })
@@ -44,6 +44,9 @@ export const createUsers = async (req, res) => {
 export const updateUsers = async (req, res) => {
     const { id } = req.params
     const database = req.body;
+    if (database.role !== 3) {
+        return res.status(400).json({ message: "El rol debe ser 3." });
+    }
     try {
         const updateUser = await userModel.updateUser(id, database)
         if (!updateUser) {

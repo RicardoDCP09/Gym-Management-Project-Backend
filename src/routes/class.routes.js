@@ -1,13 +1,14 @@
 import { Router } from "express";
-import { createClasses, deleteClass, getClass, getClasses, updateClass } from "../controllers/classControllers.js";
-import { verifyTokenClass } from "../middlewares/class.middleware.js";
+import { createClasses, deleteClass, getClass, getClasses, updateClass } from "../controllers/class.controller.js";
+import { verifyAdmin, verifyCoach, verifyToken } from "../middlewares/jwt.middleware.js"
+
 
 const router = Router();
 
 
-router.get("/classes", verifyTokenClass, getClasses);
-router.get("/classes/:id", verifyTokenClass, getClass);
-router.post("/classes", verifyTokenClass, createClasses);
-router.put("/classes/:id", verifyTokenClass, updateClass);
-router.delete("/classes/:id", verifyTokenClass, deleteClass);
+router.get("/classes", verifyToken, getClasses);
+router.get("/classes/:id", verifyToken, getClass);
+router.post("/classes", verifyToken, verifyCoach, createClasses);
+router.put("/classes/:id", verifyToken, verifyCoach, updateClass);
+router.delete("/classes/:id", verifyToken, verifyCoach, deleteClass);
 export default router;

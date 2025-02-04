@@ -20,7 +20,7 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid password" });
         }
-        const token = await createAccesToken({ email: user.email })
+        const token = await createAccesToken({ email: user.email, role: user.role });
 
         return res.json({ token, user })
     } catch (error) {
@@ -46,7 +46,7 @@ export const register = async (req, res) => {
 
         const newUser = await authModel.register({ name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
 
-        const token = await createAccesToken({ email: newUser.email })
+        const token = await createAccesToken({ email: newUser.email, role: newUser.role })
 
         return res.status(201).json({ token, newUser });
     } catch (error) {

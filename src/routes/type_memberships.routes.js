@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { createTypeMembership, deleteTypeMembership, getTypeMembership, getTypeMemberships, updateTypeMembership } from "../controllers/membershipsControllers.js";
-import { verifyTokenTypeMemberships } from "../middlewares/typeMemberships.middleware.js";
+import { createTypeMembership, deleteTypeMembership, getTypeMembership, getTypeMemberships, updateTypeMembership } from "../controllers/memberships.controller.js";
+import { verifyAdmin, verifyCoach, verifyToken } from "../middlewares/jwt.middleware.js"
 
 const router = Router();
 
 
-router.get("/typememberships", verifyTokenTypeMemberships, getTypeMemberships);
-router.get("/typememberships/:id", verifyTokenTypeMemberships, getTypeMembership);
-router.post("/typememberships", verifyTokenTypeMemberships, createTypeMembership);
-router.put("/typememberships/:id", verifyTokenTypeMemberships, updateTypeMembership);
-router.delete("/typememberships/:id", verifyTokenTypeMemberships, deleteTypeMembership);
+router.get("/typememberships", verifyToken, getTypeMemberships);
+router.get("/typememberships/:id", verifyToken, getTypeMembership);
+router.post("/typememberships", verifyToken, verifyAdmin, createTypeMembership);
+router.put("/typememberships/:id", verifyToken, verifyAdmin, updateTypeMembership);
+router.delete("/typememberships/:id", verifyToken, verifyAdmin, deleteTypeMembership);
 export default router;

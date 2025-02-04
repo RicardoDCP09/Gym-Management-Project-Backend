@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { recover, resetpassword } from '../controllers/recovPasswordControllers.js';
-import { verifyTokenRecovPassword } from '../middlewares/recovPassword.middleware.js'
+import { recover, resetpassword } from '../controllers/recovPassword.controller.js';
+import { verifyToken } from "../middlewares/jwt.middleware.js"
 const router = Router();
 
 router.post('/recover', recover);
-router.post('/resetpassword/:token', verifyTokenRecovPassword, resetpassword);
+router.post('/resetpassword/:token', verifyToken, resetpassword);
 
 export default router;
