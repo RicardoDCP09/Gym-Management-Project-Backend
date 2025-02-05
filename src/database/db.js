@@ -4,8 +4,8 @@ import { DB_USER, DB_HOST, DB_PASSWORD, DB_DATABASE, DB_PORT } from '../config.j
 
 
 const { Pool } = pg
-const connectionString = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
-
+//const connectionString = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
+const connectionString = 'project-backend-production-2264.up.railway.app'
 export const db = new Pool({
     allowExitOnIdle: true,
     connectionString
