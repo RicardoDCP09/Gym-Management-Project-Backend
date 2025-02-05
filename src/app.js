@@ -12,6 +12,8 @@ import routinesRoutes from "./routes/routine.routes.js"
 import paymentsRoutes from "./routes/payment.routes.js"
 import progressRoutes from "./routes/progress.routes.js"
 import reportRoutes from "./routes/report.routes.js"
+// Imports ORM
+import userorm from "./routes/userorm.routes.js"
 import morgan from "morgan";
 
 const app = express();
@@ -31,6 +33,8 @@ app.use(routinesRoutes)
 app.use(paymentsRoutes)
 app.use(progressRoutes)
 app.use(reportRoutes)
+// Imports ORM 
+app.use(userorm)
 
 
 export default app;
