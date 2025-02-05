@@ -4,9 +4,9 @@ import { verifyAdmin, verifyCoach, verifyToken } from "../middlewares/jwt.middle
 
 
 const router = Router();
-router.get("/users", verifyToken, verifyCoach, getUsers);
-router.get("/users/:id", verifyToken, verifyCoach, getUser)
-router.post("/users", verifyToken, verifyAdmin, createUsers)
-router.put("/users/:id", verifyToken, verifyAdmin, updateUsers)
-router.delete("/users/:id", verifyToken, verifyAdmin, deleteUsers)
+router.get("/users", verifyToken, getUsers);
+router.get("/users/:id", verifyToken, getUser)
+router.post("/users", verifyToken, createUsers)
+router.put("/users/:id", verifyToken, updateUsers)
+router.delete("/users/:id", verifyToken, deleteUsers)
 export default router;

@@ -6,7 +6,7 @@ import { verifyAdmin, verifyCoach, verifyToken } from "../middlewares/jwt.middle
 const router = Router();
 router.get("/staff", verifyToken, getStaffs);
 router.get("/staff/:id", verifyToken, getStaff)
-router.post("/staff", verifyToken, verifyAdmin, createStaff)
-router.put("/staff/:id", verifyToken, verifyAdmin, updateStaff)
-router.delete("/staff/:id", verifyToken, verifyAdmin, deleteStaff)
+router.post("/staff", verifyToken, createStaff)
+router.put("/staff/:id", verifyToken, updateStaff)
+router.delete("/staff/:id", verifyToken, deleteStaff)
 export default router

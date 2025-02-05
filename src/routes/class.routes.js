@@ -6,9 +6,9 @@ import { verifyAdmin, verifyCoach, verifyToken } from "../middlewares/jwt.middle
 const router = Router();
 
 
-router.get("/classes", verifyToken, getClasses);
-router.get("/classes/:id", verifyToken, getClass);
-router.post("/classes", verifyToken, verifyCoach, createClasses);
-router.put("/classes/:id", verifyToken, verifyCoach, updateClass);
-router.delete("/classes/:id", verifyToken, verifyCoach, deleteClass);
+router.get("/classes", getClasses);
+router.get("/classes/:id", getClass);
+router.post("/classes", verifyToken, createClasses);
+router.put("/classes/:id", verifyToken, updateClass);
+router.delete("/classes/:id", verifyToken, deleteClass);
 export default router;

@@ -7,7 +7,7 @@ const router = Router();
 
 router.get("/typememberships", verifyToken, getTypeMemberships);
 router.get("/typememberships/:id", verifyToken, getTypeMembership);
-router.post("/typememberships", verifyToken, verifyAdmin, createTypeMembership);
-router.put("/typememberships/:id", verifyToken, verifyAdmin, updateTypeMembership);
-router.delete("/typememberships/:id", verifyToken, verifyAdmin, deleteTypeMembership);
+router.post("/typememberships", verifyToken, createTypeMembership);
+router.put("/typememberships/:id", verifyToken, updateTypeMembership);
+router.delete("/typememberships/:id", verifyToken, deleteTypeMembership);
 export default router;

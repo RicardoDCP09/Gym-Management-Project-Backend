@@ -12,12 +12,19 @@ import routinesRoutes from "./routes/routine.routes.js"
 import paymentsRoutes from "./routes/payment.routes.js"
 import progressRoutes from "./routes/progress.routes.js"
 import reportRoutes from "./routes/report.routes.js"
+import roles from "./routes/role.routes.js"
 // Imports ORM
 import userorm from "./routes/userorm.routes.js"
 import morgan from "morgan";
+import cors from 'cors';
+
+
 
 const app = express();
-
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(userRoutes)
@@ -33,6 +40,7 @@ app.use(routinesRoutes)
 app.use(paymentsRoutes)
 app.use(progressRoutes)
 app.use(reportRoutes)
+app.use(roles)
 // Imports ORM 
 app.use(userorm)
 

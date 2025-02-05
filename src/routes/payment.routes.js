@@ -4,9 +4,9 @@ import { verifyAdmin, verifyCoach, verifyToken } from "../middlewares/jwt.middle
 
 
 const router = Router();
-router.get("/payments", verifyToken, verifyCoach, getPayments);
-router.get("/payments/:id", verifyToken, verifyCoach, getPayment)
-router.post("/payments", verifyToken, verifyAdmin, createPayment)
-router.put("/payments/:id", verifyToken, verifyAdmin, updatePayment)
-router.delete("/payments/:id", verifyToken, verifyAdmin, deletePayment)
+router.get("/payments", verifyToken, getPayments);
+router.get("/payments/:id", verifyToken, getPayment)
+router.post("/payments", verifyToken, createPayment)
+router.put("/payments/:id", verifyToken, updatePayment)
+router.delete("/payments/:id", verifyToken, deletePayment)
 export default router;
