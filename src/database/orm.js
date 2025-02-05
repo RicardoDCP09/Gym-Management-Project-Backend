@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize';
-import { DB_DATABASE, DB_USER, DB_PASSWORD } from '../config.js'
+import { DB_DATABASE, DB_USER, DB_PASSWORD, DB_HOST } from '../config.js'
 
 const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
-    host: 'project-backend-production-2264.up.railway.app',
+    host: DB_HOST,
     dialect: 'postgres',
     logging: false,
 });
