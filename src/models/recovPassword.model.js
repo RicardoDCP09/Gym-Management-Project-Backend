@@ -41,10 +41,10 @@ const updatePassword = async (id, newPassword) => {
 
 
 
-const findUserbyData = async (email, phone, fechaNac) => {
+const findUserbyData = async (email) => {
     const query = {
-        text: `SELECT * FROM Gym_management.users WHERE email = $1 AND phone = $2 AND fechaNac = $3`,
-        values: [email, phone, fechaNac]
+        text: `SELECT * FROM Gym_management.users WHERE email = $1`,
+        values: [email]
     };
     const { rows } = await db.query(query);
     return rows[0];

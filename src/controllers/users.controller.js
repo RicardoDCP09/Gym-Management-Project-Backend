@@ -1,5 +1,5 @@
 import { userModel } from "../models/user.model.js"
-
+import bcrypt from "bcryptjs";
 
 
 export const getUsers = async (req, res) => {
@@ -27,9 +27,17 @@ export const getUser = async (req, res) => {
 }
 
 export const createUsers = async (req, res) => {
-    const database = req.body;
     try {
-        const newUser = await userModel.createUser(database)
+        const { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role } = req.body;
+
+        if (!name || !lastname || !email || !password || !fechaNac || !registerdate || !role) {
+            return res.status(400).json({ message: "Please fill in all fields" });
+        }
+        const hash = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, hash);
+
+        const newUser = await userModel.createUser({ name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
+
         res.status(201).json(newUser)
     } catch (error) {
         console.log(error)
@@ -42,13 +50,18 @@ export const createUsers = async (req, res) => {
 }
 
 export const updateUsers = async (req, res) => {
-    const { id } = req.params
-    const database = req.body;
-    if (database.role !== 3) {
-        return res.status(400).json({ message: "El rol debe ser 3." });
-    }
     try {
-        const updateUser = await userModel.updateUser(id, database)
+        const { id } = req.params
+        const { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role } = req.body;
+        if (role !== 3) {
+            return res.status(400).json({ message: "El rol debe ser 3." });
+        }
+        if (!name || !lastname || !email || !password || !fechaNac || !registerdate || !role) {
+            return res.status(400).json({ message: "Please fill in all fields" });
+        }
+        const hash = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, hash);
+        const updateUser = await userModel.updateUser(id, { name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
         if (!updateUser) {
             return res.status(404).json({ message: 'User not found' });
         }

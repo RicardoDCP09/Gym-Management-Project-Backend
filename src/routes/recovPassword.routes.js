@@ -3,7 +3,7 @@ import { recover, resetpassword } from '../controllers/recovPassword.controller.
 import { verifyToken } from "../middlewares/jwt.middleware.js"
 const router = Router();
 
-router.post('/recover', recover);
-router.post('/resetpassword/:token', verifyToken, resetpassword);
+router.get('/recover', recover);
+router.post('/resetpassword/:token', resetpassword);
 
 export default router;
