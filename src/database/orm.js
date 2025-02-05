@@ -1,13 +1,8 @@
 import { Sequelize } from 'sequelize';
-import { DB_USER, DB_HOST, DB_PASSWORD, DB_DATABASE, DB_PORT } from '../config.js';
+import { DB_DATABASE, DB_USER, DB_PASSWORD } from '../config.js'
 
-// Configuración de la conexión
-const sequelize = new Sequelize({
-    database: DB_DATABASE,
-    username: DB_USER,
-    password: DB_PASSWORD,
-    host: DB_HOST,
-    port: DB_PORT,
+const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
+    host: 'localhost',
     dialect: 'postgres',
     logging: false,
 });
@@ -22,4 +17,4 @@ sequelize
         console.error('No se pudo conectar a la base de datos:', err);
     });
 
-export default sequelize; 
+export default sequelize;
