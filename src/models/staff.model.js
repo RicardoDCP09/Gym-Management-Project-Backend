@@ -17,29 +17,29 @@ const getStaff = async ({ id }) => {
     return rows[0];
 }
 
-const createStaff = async ({ name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role }) => {
+const createStaff = async ({ name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role }) => {
     const query = {
-        text: `INSERT INTO Gym_management.users (name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role) 
+        text: `INSERT INTO Gym_management.users (name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role) 
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) 
         RETURNING *
         `,
         values:
             [
-                name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role
+                name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role
             ]
     }
     const { rows } = await db.query(query);
     return rows[0];
 }
 
-const updateStaff = async (id, { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role }) => {
+const updateStaff = async (id, { name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role }) => {
     const query = {
         text: `UPDATE Gym_management.users 
-        SET name= $1, lastname=$2, email= $3, password= $4, phone= $5, fechaNac= $6, registerdate= $7, typemembership= $8, role= $9 
+        SET name= $1, lastname=$2, email= $3, password= $4, phone= $5, fechanac= $6, registerdate= $7, typemembership= $8, role= $9 
         WHERE id_user = $10 AND (role = 1 OR role = 2 )
         RETURNING *`,
         values: [
-            name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role, id
+            name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role, id
         ]
     }
     const { rows } = await db.query(query);

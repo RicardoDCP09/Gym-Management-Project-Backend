@@ -27,7 +27,7 @@ export const getProgress = async (req, res) => {
 export const createProgress = async (req, res) => {
     const { user_id, date, weight, bodyfat, musclegain, benchpress, squats, deadlift } = req.body;
     try {
-        const exercise = await routineModel.createProgress({ user_id, date, weight, bodyfat, musclegain, benchpress, squats, deadlift });
+        const exercise = await progressModel.createProgress({ user_id, date, weight, bodyfat, musclegain, benchpress, squats, deadlift });
         res.status(201).json(exercise)
     } catch (error) {
         console.log(error)

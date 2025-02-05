@@ -28,15 +28,15 @@ export const getStaff = async (req, res) => {
 
 export const createStaff = async (req, res) => {
     try {
-        const { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role } = req.body;
+        const { name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role } = req.body;
 
-        if (!name || !lastname || !email || !password || !fechaNac || !registerdate || !role) {
+        if (!name || !lastname || !email || !fechanac || !registerdate || !role) {
             return res.status(400).json({ message: "Please fill in all fields" });
         }
         const hash = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, hash);
 
-        const newUser = await staffModel.createStaff({ name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
+        const newUser = await staffModel.createStaff({ name, lastname, email, password: hashedPassword, phone, fechanac, registerdate, typeMembership, role })
 
         res.status(201).json(newUser)
     } catch (error) {
@@ -52,18 +52,18 @@ export const createStaff = async (req, res) => {
 export const updateStaff = async (req, res) => {
     try {
         const { id } = req.params
-        const { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role } = req.body;
+        const { name, lastname, email, password, phone, fechanac, registerdate, typeMembership, role } = req.body;
 
         if (role !== 1 && role !== 2) {
             return res.status(400).json({ message: "El rol debe ser 1 o 2." });
         }
-        if (!name || !lastname || !email || !password || !fechaNac || !registerdate || !role) {
+        if (!name || !lastname || !email || !password || !fechanac || !registerdate || !role) {
             return res.status(400).json({ message: "Please fill in all fields" });
         }
 
         const hash = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, hash);
-        const updateUser = await staffModel.updateStaff(id, { name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
+        const updateUser = await staffModel.updateStaff(id, { name, lastname, email, password: hashedPassword, phone, fechanac, registerdate, typeMembership, role })
         if (!updateUser) {
             return res.status(404).json({ message: 'User not found' });
         }

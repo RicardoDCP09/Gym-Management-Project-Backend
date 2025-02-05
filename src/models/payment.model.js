@@ -21,9 +21,6 @@ const createPayment = async ({ user_id, amount, payment_method, status, daypayme
     const query = {
         text: `INSERT INTO Gym_management.payments (user_id, amount, payment_method, status, daypayment)
                 SELECT $1, $2, $3, $4, $5
-                WHERE EXISTS (SELECT 1 FROM Gym_management.users WHERE id_user = $1) 
-                AND EXISTS (SELECT 1 FROM Gym_management.pay_methods WHERE id= = $3)
-                AND EXISTS (SELECT 1 FROM Gym_management.status_payment WHERE id = $4)
                 RETURNING *`,
         values: [user_id, amount, payment_method, status, daypayment]
     };

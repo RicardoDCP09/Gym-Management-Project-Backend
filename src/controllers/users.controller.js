@@ -56,9 +56,7 @@ export const updateUsers = async (req, res) => {
         if (role !== 3) {
             return res.status(400).json({ message: "El rol debe ser 3." });
         }
-        if (!name || !lastname || !email || !password || !fechaNac || !registerdate || !role) {
-            return res.status(400).json({ message: "Please fill in all fields" });
-        }
+
         const hash = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, hash);
         const updateUser = await userModel.updateUser(id, { name, lastname, email, password: hashedPassword, phone, fechaNac, registerdate, typeMembership, role })
