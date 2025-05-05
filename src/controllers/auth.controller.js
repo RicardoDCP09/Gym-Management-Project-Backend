@@ -21,7 +21,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid password" })
         }
 
-        const token = await createAccesToken({ email: user.email, role: user.role, id: user.id })
+        const token = await createAccesToken({ email: user.email, role: user.role, id: user.id_user })
 
         const { password: _, ...userWithoutPassword } = user
         const userToSend = {
