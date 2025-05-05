@@ -19,15 +19,8 @@ const getUserRole = async ({ id }) => {
 
 const createUserRole = async ({ user_id, role_id }) => {
     const query = {
-        text: `INSERT INTO Gym_management.user_roles
-        (name_role ) 
-        VALUES ($1) 
-        RETURNING *
-        `,
-        values:
-            [
-                user_id, role_id
-            ]
+        text: `INSERT INTO Gym_management.user_roles (user_id, role_id) VALUES ($1, $2) RETURNING *`,
+        values: [user_id, role_id]
     }
     const { rows } = await db.query(query);
     return rows[0];

@@ -15,7 +15,7 @@ app.listen(PORT);
 
 console.log("Server on port: ", PORT);
 
-sequelize.sync({ force: false }) // Cambia a true si deseas reiniciar la base de datos
+sequelize.sync({ force: false }) // Cambiar a true si deseamos reiniciar la base de datos
     .then(() => {
         console.log("Base de datos sincronizada");
     })
