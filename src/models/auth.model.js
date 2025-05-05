@@ -25,7 +25,18 @@ const findOneByEmail = async (email) => {
     const { rows } = await db.query(query);
     return rows[0];
 }
+
+const findOneById = async (id) => {
+    const query = {
+        text: `SELECT * FROM Gym_management.users WHERE id_user = $1`,
+        values: [id],
+    }
+    const { rows } = await db.query(query)
+    return rows[0]
+}
+
 export const authModel = {
     register,
     findOneByEmail,
+    findOneById,
 }

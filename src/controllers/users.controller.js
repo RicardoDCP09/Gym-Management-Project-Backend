@@ -1,4 +1,5 @@
 import { userModel } from "../models/user.model.js"
+import { authModel } from "../models/auth.model.js"
 import bcrypt from "bcryptjs";
 
 
@@ -13,16 +14,17 @@ export const getUsers = async (req, res) => {
 }
 
 export const getUser = async (req, res) => {
-    const { id } = req.params
     try {
-        const user = await userModel.getUser({ id })
+        const { id } = req.params
+        const user = await authModel.findOneById(id)
         if (!user) {
-            return res.status(404).json({ message: "User not found" })
+            return res.status(404).json({ message: 'User not found' })
         }
-        res.status(201).json(user)
-    } catch {
-        console.log(error)
-        return res.status(500).json({ message: "Error obtaining user" })
+        // Excluye el password antes de enviar
+        const { password, ...userWithoutPassword } = user
+        res.json(userWithoutPassword)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
     }
 }
 
