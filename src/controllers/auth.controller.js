@@ -20,7 +20,11 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid password" });
         }
-        const token = await createAccesToken({ email: user.email, role: user.role });
+        const token = await createAccesToken({ email: user.email, role: user.role, id: user.id })
+
+        const { password: _, ...userWithoutPassword } = user
+
+        return res.json({ token, user: userWithoutPassword })
 
         return res.json({ token, user })
     } catch (error) {
