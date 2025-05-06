@@ -5,35 +5,36 @@ import { authModel } from "../models/auth.model.js";
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body
-        const user = await authModel.findOneByEmail(email)
+        const { email, password } = req.body;
 
+        // Validar primero los campos
         if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required" })
+            return res.status(400).json({ message: "Email and password are required" });
         }
+
+        const user = await authModel.findOneByEmail(email);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" })
+            return res.status(404).json({ message: "User not found" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: "Invalid password" })
+            return res.status(400).json({ message: "Invalid password" });
         }
 
-        const token = await createAccesToken({ email: user.email, role: user.role, id: user.id_user })
+        const token = await createAccesToken({ email: user.email, role: user.role, id: user.id_user });
 
-        const { password: _, ...userWithoutPassword } = user
+        const { password: _, ...userWithoutPassword } = user;
         const userToSend = {
             ...userWithoutPassword,
-            id: user.id_user, // <-- aquí haces el mapeo
-        }
-        return res.json({ token, user: userToSend })
+            id: user.id_user,
+        };
+        return res.json({ token, user: userToSend });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }
-
 export const register = async (req, res) => {
     try {
         const { name, lastname, email, password, phone, fechaNac, registerdate, typeMembership, role } = req.body;
