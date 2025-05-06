@@ -5,6 +5,7 @@ import { authModel } from "../models/auth.model.js";
 
 export const login = async (req, res) => {
     try {
+        console.log(req.body)
         const { email, password } = req.body;
 
         // Validar primero los campos
