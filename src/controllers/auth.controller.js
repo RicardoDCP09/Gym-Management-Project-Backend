@@ -14,12 +14,17 @@ export const login = async (req, res) => {
         }
 
         const user = await authModel.findOneByEmail(email);
+        console.log("Usuario encontrado:", user);
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
+        console.log("Contraseña recibida:", password);
+        console.log("Contraseña en BD:", user.password);
 
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log("¿Contraseña coincide?", isMatch);
+
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid password" });
         }
